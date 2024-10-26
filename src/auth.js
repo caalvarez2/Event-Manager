@@ -53,7 +53,7 @@ signInForm.addEventListener("submit", (event)=>{
             console.log(user.displayName)
             console.log("Signed In With Created user")
             console.log(auth)
-            //window.location.href = './management.html';
+            //window.location.href = ''; //redirect to main page
             console.log('redirected')
         }).catch((e)=>{
             console.log(e)
