@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Manager Page</title>
+</head>
+<body>
+    <h1>Management Settings</h1>
+    <h3>Add New Events</h3>
+    <form class="add_event">
+        <label for="title">Event Title:</label>
+        <input type="text" name="title" required><br>
+        <label for="artist/s">Artist/s:</label>
+        <input type="text" name="artist/s" required><br>
+        <label for="location">Location:</label>
+        <input type="text" name="location" required><br>
+        <label for="date">Date:</label>
+        <input type="date" name="date" required><br>
+        <label for="time">Time:</label>
+        <input type="time" name="time" required><br>
+        <label for="type">Event Type:</label>
+        <select name="type" required>
+            <option value="">Select Event Type</option>
+            <option value="concert">Concert</option>
+            <option value="sports">Sports</option>
+            <option value="theater">Theater</option>
+            <option value="festival">Festival</option>
+        </select>
+        <br>
+        <button>Add Event</button>
+    </form>
+    <hr>
+    <h3>Cancel Events</h3>
+    <form class="cancel_event">
+        <label for="event_id">Event ID:</label>
+        <input type="text" name="event_id" required>
+        <br>
+        <button>Cancel</button>
+    </form>
+    <script src="./bundles/index.bundle.js" type="module"></script>
+    <script src="./bundles/login.bundle.js" defer></script>
+</body>
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 5%;
+    }
+    .add_event{
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+    }
+    .cancel_event{
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+    }
+</style>
