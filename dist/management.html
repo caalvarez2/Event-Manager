@@ -38,6 +38,14 @@
         <br>
         <button>Cancel</button>
     </form>
+    <hr>
+    <h3> Sign Out </h3>
+    <form class="signOut" id="signOut">
+        <input type="submit" value="Sign Out">
+    </form>
+
+    <script src="./bundles/login.bundle.js"></script>
+    <script src="./bundles/auth.bundle.js"></script>
     <script src="./bundles/index.bundle.js" type="module"></script>
     <script src="./bundles/login.bundle.js" defer></script>
 </body>
@@ -60,6 +68,11 @@
         width: 30%;
     }
     .cancel_event{
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+    }
+    .signOut{
         display: flex;
         flex-direction: column;
         width: 30%;
