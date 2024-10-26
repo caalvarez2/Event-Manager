@@ -7,32 +7,32 @@ const addEventForm = document.getElementById("addEventForm");
 const cancelEventForm = document.getElementById("cancelEventForm");
 
 
-    addEventForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+addEventForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        const title = addEventForm.title.value;
-        const artist = addEventForm['artist/s'].value;
-        const location = addEventForm.location.value;
-        const date = addEventForm.date.value;
-        const time = addEventForm.time.value;
-        const type = addEventForm.type.value;
+    const title = addEventForm.title.value;
+    const artist = addEventForm['artist/s'].value;
+    const location = addEventForm.location.value;
+    const date = addEventForm.date.value;
+    const time = addEventForm.time.value;
+    const type = addEventForm.type.value;
 
-        try {
-            await addDoc(collection(db, 'Events'), {
-                title,
-                artist,
-                location,
-                date,
-                time,
-                type
-            });
-            addEventForm.reset();
-            alert('Event added successfully!');
-        } catch (error) {
-            console.error("Error adding event: ", error);
-            alert('Failed to add event.');
-        }
-    });
+    try {
+        await addDoc(collection(db, 'Events'), {
+            title,
+            artist,
+            location,
+            date,
+            time,
+            type
+        });
+        addEventForm.reset();
+        alert('Event added successfully!');
+    } catch (error) {
+        console.error("Error adding event: ", error);
+        alert('Failed to add event.');
+    }
+});
 
 
 cancelEventForm.addEventListener('submit', async (e) => {
