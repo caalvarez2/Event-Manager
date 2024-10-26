@@ -1,8 +1,9 @@
 import app from './config.js';
 import {browserSessionPersistence, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut} from "firebase/auth"
-
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 const auth = getAuth(app)
+const db = getFirestore(app)
 
 const createAccountForm = document.getElementById("createAccount")
 
@@ -16,27 +17,35 @@ onAuthStateChanged(auth, (user) => {
     }
 })
 
-createAccountForm.addEventListener("submit", (event) =>{
-    event.preventDefault()
+createAccountForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-    const name = createAccountForm.name.value
-    const email = createAccountForm.email.value
-    const pass = createAccountForm.password.value
-    
-    setPersistence(auth, browserSessionPersistence)
-    .then(()=>{
-        createUserWithEmailAndPassword(auth, email, pass)
-        .then((userCredential)=>{
-            const user = userCredential.user
-            console.log(user)
-            console.log(user.uid)
-            location.reload()
-        })
-    })
-    .catch((e)=>{
-        console.log(e)
-    })
-})
+    const name = createAccountForm.name.value;
+    const email = createAccountForm.email.value;
+    const pass = createAccountForm.password.value;
+
+    try {
+        await setPersistence(auth, browserSessionPersistence);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        const user = userCredential.user;
+        console.log(user);
+        console.log(user.uid);
+        await addDoc(collection(db, 'Customers'), {
+            name: name,
+            email: email,
+            createdAt: new Date(),
+            balance: 1000, 
+            ticketCount: 0  
+        });
+
+        alert("Account created and customer added to database!");
+        location.reload(); 
+    } catch (e) {
+        console.error("Error creating account or adding customer:", e);
+        alert("Failed to create account or add customer.");
+    }
+});
+  
 
 const signInForm = document.getElementById("signIn")
 signInForm.addEventListener("submit", (event)=>{
