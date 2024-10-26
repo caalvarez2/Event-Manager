@@ -8,7 +8,7 @@
 <body>
     <h1>Management Settings</h1>
     <h3>Add New Events</h3>
-    <form class="add_event">
+    <form id="addEventForm" class="add_event">
         <label for="title">Event Title:</label>
         <input type="text" name="title" required><br>
         <label for="artist/s">Artist/s:</label>
@@ -32,7 +32,7 @@
     </form>
     <hr>
     <h3>Cancel Events</h3>
-    <form class="cancel_event">
+    <form id="cancelEventForm" class="cancel_event">
         <label for="event_id">Event ID:</label>
         <input type="text" name="event_id" required>
         <br>
@@ -44,10 +44,7 @@
         <input type="submit" value="Sign Out">
     </form>
 
-    <script src="./bundles/login.bundle.js"></script>
-    <script src="./bundles/auth.bundle.js"></script>
     <script src="./bundles/index.bundle.js" type="module"></script>
-    <script src="./bundles/login.bundle.js" defer></script>
 </body>
 <style>
     body {
