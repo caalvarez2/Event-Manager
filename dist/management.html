@@ -39,39 +39,92 @@
         <button>Cancel</button>
     </form>
     <hr>
+    <h3>Update Events</h3>
+    <form id="updateEventForm" class="update_event">
+        <label for="event_id">Event ID:</label>
+        <input type="text" name="event_id" required><br>
+        <label for="date">Date:</label>
+        <input type="date" name="date" required><br>
+        <label for="time">Time:</label>
+        <input type="time" name="time" required><br>
+        <br>
+        <button>Update</button>
+    </form>
+    <hr>
     <h3> Sign Out </h3>
     <form class="signOut" id="signOut">
         <input type="submit" value="Sign Out">
     </form>
 
     <script src="./bundles/index.bundle.js" type="module"></script>
+
 </body>
 <style>
+    /* Dark theme styles */
     body {
+        background-color: #121212;
+        color: #e0e0e0;
+        font-family: Arial, sans-serif;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         min-height: 100vh;
         margin: 0;
+        padding: 20px;
     }
-    h1 {
-        text-align: center;
-        margin-bottom: 5%;
+    
+    h1, h3 {
+        color: #ffffff;
     }
-    .add_event{
-        display: flex;
-        flex-direction: column;
-        width: 30%;
+    
+    form {
+        background-color: #1e1e1e;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
     }
-    .cancel_event{
-        display: flex;
-        flex-direction: column;
-        width: 30%;
+
+    label {
+        color: #bbbbbb;
     }
-    .signOut{
+    
+    input[type="text"], input[type="date"], input[type="time"], select {
+        background-color: #2a2a2a;
+        color: #ffffff;
+        border: none;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    input[type="submit"], button {
+        background-color: #ff5722;
+        color: #ffffff;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    input[type="submit"]:hover, button:hover {
+        background-color: #e64a19;
+    }
+
+    hr {
+        border: 1px solid #333333;
+        width: 80%;
+        margin: 20px 0;
+    }
+    
+    .add_event, .cancel_event, .update_event, .signOut {
         display: flex;
         flex-direction: column;
         width: 30%;
     }
 </style>
+</html>
