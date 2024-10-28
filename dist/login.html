@@ -4,11 +4,11 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        
+        <title>SignIn</title>
+        <link rel="stylesheet" href="auth-style.css">
     </head>
     <body>
-        <h1>Logging-In</h1>
+       <!-- <h1>Logging-In</h1>
         <h3> Create Account </h3>
         <form id="createAccount">
            <label for="name"> Name: </label>
@@ -33,13 +33,53 @@
         <form id="signOut">
            <input type="submit" value="Sign Out">
         </form>
+            -->
+
+        <div class="container">
+            <!-- Sign In Form -->
+            <div class="form-container" id="signIn">
+                <form action="#">
+                    <h1>Welcome Back</h1>
+                    <input type="email" id="signInEmail" placeholder="Email" required />
+                    <input type="password" id="signInPassword" placeholder="Password" required />
+                    <button class="btn" type="submit" value="Sign In">Sign In</button>
+                    <p>Don't have an account? <a href="#" id="createAccountLink">Create Account</a></p>
+                </form>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div class="form-container" id="createAccount" style="display: none;">
+                <form action="#">
+                    <h1>Create Account</h1>
+                    <input type="text" id="signUpName" placeholder="Name" required />
+                    <input type="email" id="signUpEmail" placeholder="Email" required />
+                    <input type="password" id="signUpPassword" placeholder="Password" required />
+                    <button class="btn" type="submit" value="Sign In">Sign Up</button>
+                    <p>Already have an account? <a href="#" id="signInLink">Sign In</a></p>
+                </form>
+            </div>
+        </div>
 
         <script src="./bundles/login.bundle.js"></script>
         <script src="./bundles/auth.bundle.js"></script>
 
     </body>
 </html>
-<style>
+<script>
+    const createAccountLink = document.getElementById('createAccountLink')
+    createAccountLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('signIn').style.display = 'none';
+        document.getElementById('createAccount').style.display = 'block';
+    });
+
+    document.getElementById('signInLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('signIn').style.display = 'block';
+        document.getElementById('createAccount').style.display = 'none';
+    });
+</script>
+<!--<style>
     body {
         background-color: #121212;
         color: #e0e0e0;
@@ -112,4 +152,4 @@
         flex-direction: column;
         width: 30%;
     }
-</style>
+</style>-->

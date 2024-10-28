@@ -17,53 +17,51 @@ onAuthStateChanged(auth, (user) => {
 })
 
 createAccountForm.addEventListener("submit", (event) =>{
-    event.preventDefault()
+    event.preventDefault();
 
-    const name = createAccountForm.name.value
-    const email = createAccountForm.email.value
-    const pass = createAccountForm.password.value
-    
+    const name = document.getElementById("signUpName").value;
+    const email = document.getElementById("signUpEmail").value;
+    const pass = document.getElementById("signUpPassword").value;
+
     setPersistence(auth, browserSessionPersistence)
     .then(()=>{
         createUserWithEmailAndPassword(auth, email, pass)
         .then((userCredential)=>{
-            const user = userCredential.user
-            console.log(user)
-            console.log(user.uid)
-            location.reload()
+            const user = userCredential.user;
+            console.log(user);
+            console.log(user.uid);
+            location.reload();
         })
     })
     .catch((e)=>{
-        console.log(e)
-    })
-})
+        console.log(e);
+    });
+});
 
 const signInForm = document.getElementById("signIn")
+
 signInForm.addEventListener("submit", (event)=>{
-    event.preventDefault()
+    event.preventDefault();
+
+    const email = document.getElementById("signInEmail").value;
+    const pass = document.getElementById("signInPassword").value;
+
     setPersistence(auth, browserSessionPersistence)
     .then(() => {
-
-        const email = signInForm.email.value
-        const pass = signInForm.password.value
-        console.log(email)
-        console.log(pass)
-        signInWithEmailAndPassword(auth,email,pass)
+        signInWithEmailAndPassword(auth, email, pass)
         .then((user)=>{
-            console.log(user.displayName)
-            console.log("Signed In With Created user")
-            console.log(auth)
-            //window.location.href = ''; //redirect to main page
-            console.log('redirected')
+            console.log(user.displayName);
+            console.log("Signed In With Created user");
+            console.log(auth);
+            console.log('redirected');
         }).catch((e)=>{
-            console.log(e)
-        })
+            console.log(e);
+        });
     })
     .catch((e) =>{
-        console.log("Persistence error 2")
-    })
-})
-
+        console.log("Persistence error 2", e);
+    });
+});
 
 const signOutUserForm = document.querySelector("#signOut")
 signOutUserForm.addEventListener("submit", (event) => {
@@ -74,4 +72,16 @@ signOutUserForm.addEventListener("submit", (event) => {
     })
 })
 
+const createAccountLink = document.getElementById('createAccountLink')
+createAccountLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('signIn').style.display = 'none';
+    document.getElementById('createAccount').style.display = 'block';
+});
+
+document.getElementById('signInLink').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('signIn').style.display = 'block';
+    document.getElementById('createAccount').style.display = 'none';
+});
 
