@@ -10,6 +10,52 @@
   <!-- Firebase SDKs -->
   <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="navbar-brand">Event Manager</div>
+    <nav>
+      <a href="#events">Events</a>
+      <a href="#filter">Filter</a>
+      <button class="signin-button"><a href="login.html">Sign In</a></button>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Filter Section -->
+    <section id="filter" class="filter-section">
+      <h2>Filter Events</h2>
+      <div class="filter-options">
+        <select>
+          <option value="">Event Type</option>
+          <option value="Concert">Concert</option>
+          <option value="Sports">Sports</option>
+          <option value="Theater">Theater</option>
+        </select>
+        <select>
+          <option value="">Location</option>
+          <option value="online">Online</option>
+          <option value="onsite">Onsite</option>
+        </select>
+        <input type="date" placeholder="Select Date">
+      </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="events-section">
+      <h2>Upcoming Events</h2>
+      <div class="event-cards"></div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>Contact us: info@eventmanager.com</p>
+    <p>&copy; 2024 Event Manager. All Rights Reserved.</p>
+  </footer>
 
   <script type="module">
     // Import Firebase modules and initialize Firebase
@@ -34,29 +80,6 @@
     // Reference to the events section in the HTML
     const eventsContainer = document.querySelector('.event-cards');
 
-    // Function to fetch events from Firestore and render them
-    async function fetchAndRenderEvents() {
-        try {
-            console.log("Fetching events from Firestore...");
-            const querySnapshot = await getDocs(collection(db, "Events"));
-            
-            if (querySnapshot.empty) {
-            console.log("No events found in Firestore.");
-            return;
-            }
-            
-            querySnapshot.forEach((doc) => {
-            const eventData = doc.data();
-            console.log("Event data:", eventData); // Log each event's data
-            const eventCard = createEventCard(eventData);
-            eventsContainer.appendChild(eventCard);
-            });
-        } catch (error) {
-            console.error("Error fetching events:", error);
-        }
-    }
-
-
     // Function to create an event card element based on Firestore data
     function createEventCard(eventData) {
       const card = document.createElement('div');
@@ -66,84 +89,57 @@
       infoDiv.classList.add('event-info');
 
       const title = document.createElement('h3');
-      title.textContent = eventData.Title || "Untitled Event";
+      title.textContent = eventData.title ? eventData.title : "Untitled Event";
       infoDiv.appendChild(title);
 
       const artist = document.createElement('p');
-      artist.textContent = `Artist/s: ${eventData["Artist/s"] || "N/A"}`;
+      artist.textContent = eventData["artist"] ? `Artist/s: ${eventData["artist"]}` : "Artist/s: N/A";
       infoDiv.appendChild(artist);
 
       const date = document.createElement('p');
-      date.textContent = `Date: ${eventData.Date || "Unknown"}`;
+      date.textContent = eventData.date ? `Date: ${eventData.date}` : "Date: Unknown";
       infoDiv.appendChild(date);
 
       const time = document.createElement('p');
-      time.textContent = `Time: ${eventData.Time || "TBA"}`;
+      time.textContent = eventData.Time ? `time: ${eventData.time}` : "Time: TBA";
       infoDiv.appendChild(time);
 
       const location = document.createElement('p');
-      location.textContent = `Location: ${eventData.Location || "TBA"}`;
+      location.textContent = eventData.location ? `Location: ${eventData.location}` : "Location: TBA";
       infoDiv.appendChild(location);
 
       const type = document.createElement('p');
-      type.textContent = `Type: ${eventData.Type || "General"}`;
+      type.textContent = eventData.type ? `Type: ${eventData.type}` : "Type: General";
       infoDiv.appendChild(type);
 
       card.appendChild(infoDiv);
       return card;
     }
 
+    // Function to fetch and render events
+    async function fetchAndRenderEvents() {
+      try {
+        console.log("Fetching events from Firestore...");
+        const querySnapshot = await getDocs(collection(db, "Events"));
+
+        if (querySnapshot.empty) {
+          console.log("No events found in Firestore.");
+          return;
+        }
+
+        querySnapshot.forEach((doc) => {
+          const eventData = doc.data();
+          console.log("Event data:", eventData);
+          const eventCard = createEventCard(eventData);
+          eventsContainer.appendChild(eventCard);
+        });
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    }
+
     // Call the function to fetch and display the events
     fetchAndRenderEvents();
   </script>
-</head>
-<body>
-
-  <!-- Navbar -->
-  <header class="navbar">
-    <div class="navbar-brand">Event Manager</div>
-    <nav>
-      <a href="#events">Events</a>
-      <a href="#filter">Filter</a>
-      <button class="signin-button"><a href="login.html">Sign In</a></button>
-    </nav>
-  </header>
-
-  <!-- Main Content -->
-  <main>
-    <!-- Filter Section -->
-    <section id="filter" class="filter-section">
-      <h2>Filter Events</h2>
-      <div class="filter-options">
-        <select>
-          <option value="">Event Type</option>
-          <option value="conference">Conference</option>
-          <option value="workshop">Workshop</option>
-          <option value="meetup">Meetup</option>
-        </select>
-        <select>
-          <option value="">Location</option>
-          <option value="online">Online</option>
-          <option value="onsite">Onsite</option>
-        </select>
-        <input type="date" placeholder="Select Date">
-      </div>
-    </section>
-
-    <!-- Events Section -->
-    <section id="events" class="events-section">
-      <h2>Upcoming Events</h2>
-      <div class="event-cards">
-        <!-- Event data will be inserted here dynamically -->
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <p>Contact us: info@eventmanager.com</p>
-    <p>&copy; 2024 Event Manager. All Rights Reserved.</p>
-  </footer>
-
 </body>
 </html>
