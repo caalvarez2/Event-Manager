@@ -41,28 +41,65 @@
 </html>
 <style>
     body {
+        background-color: #121212;
+        color: #e0e0e0;
+        font-family: Arial, sans-serif;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         min-height: 100vh;
         margin: 0;
+        padding: 20px;
     }
-    h1 {
-        text-align: center;
-        margin-bottom: 5%;
+    
+    h1, h3 {
+        color: #ffffff;
     }
-    #createAccount{
-        display: flex;
-        flex-direction: column;
-        width: 30%;
+   
+    form {
+        background-color: #1e1e1e;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
     }
-    #signIn{
-        display: flex;
-        flex-direction: column;
-        width: 30%;
+
+    label {
+        color: #bbbbbb;
     }
-    #signOut{
+    
+    input[type="text"], input[type="date"], input[type="time"], select {
+        background-color: #2a2a2a;
+        color: #ffffff;
+        border: none;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        width: 95%;
+    }
+    input[type="submit"], button {
+        background-color: rgb(104, 168, 246);
+        color: #ffffff;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    input[type="submit"]:hover, button:hover {
+        background-color: rgb(104, 168, 246);
+    }
+
+    hr {
+        border: 1px solid #333333;
+        width: 80%;
+        margin: 20px 0;
+    }
+    
+    #signOut, #signIn, #createAccount{
         display: flex;
         flex-direction: column;
         width: 30%;
