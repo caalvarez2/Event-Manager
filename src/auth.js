@@ -51,29 +51,26 @@ createAccountForm.addEventListener("submit", async (event) => {
 
 const signInForm = document.getElementById("signIn")
 signInForm.addEventListener("submit", (event)=>{
-    event.preventDefault()
+    event.preventDefault();
+    
+    const email = document.getElementById("signInEmail").value;
+    const pass = document.getElementById("signInPassword").value;
+
     setPersistence(auth, browserSessionPersistence)
     .then(() => {
-
-        const createAccountForm = document.getElementById("createAccount");
-        const signInForm = document.getElementById("signIn");
-        console.log(email)
-        console.log(pass)
-        signInWithEmailAndPassword(auth,email,pass)
-        .then((user)=>{
-            console.log(user.displayName)
-            console.log("Signed In With Created user")
-            console.log(auth)
-            console.log('redirected')
-            window.location.href = 'index.html'
-        }).catch((e)=>{
-            console.log(e)
-        })
+        signInWithEmailAndPassword(auth, email, pass)
+        .then((user) => {
+            console.log(user.displayName);
+            console.log("Signed In With Created user");
+            window.location.href = 'index.html';
+        }).catch((e) => {
+            console.log(e);
+        });
     })
     .catch((e) =>{
-        console.log("Persistence error 2")
-    })
-})
+        console.log("Persistence error:", e);
+    });
+});
 
 
 const signOutUserForm = document.querySelector("#signOut")
