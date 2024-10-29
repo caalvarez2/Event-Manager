@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seating Chart</title>
+    <link rel="stylesheet" href="seating.css">
+</head>
+<body>
+    <div class="legend">
+        <span class="legend-item bowl">Available Seats</span>
+        <span class="legend-item occupied">Occupied Seats</span>
+        <span class="legend-item selected">Selected Seat</span>
+    </div>
+    
+    <div class="container">
+        <div class="stadium-container">
+            <div class="performance-area">Performance Area</div>
+        </div>
+        
+        <div class="selected-tickets">
+            <h2>Selected Tickets</h2>
+            <ul id="selectedSeatsList"></ul>
+            <a href="checkout.html" id="checkoutButton" class="button">Checkout</a>
+        </div>
+    </div>
+    
+    <button id="addToCart">Add to Cart</button>
+    <button id="resetSelection">Reset Selection</button>
+
+    <script src="./src/seating.js"></script>
+    <script src="./bundles/seating.bundle.js" type="module"></script>
+</body>
+</html>

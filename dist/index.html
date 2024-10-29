@@ -1,28 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Manager</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Manager</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Firebase SDKs -->
+  <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
-    
-    <header>
-        <div>Event Manager</div>
-        <button><a href="login.html">Sign In</a></button>
-    </header>
 
-    <main>
-        <section>
-            <h2>Events</h2>
-            <p>This section will contain the events that will be coming soon</p>
-        </section>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="navbar-brand">EMS - Event Manager System</div>
+    <nav>
+      <button class="signin-button"><a href="login.html">Sign In</a></button>
+    </nav>
+  </header>
 
-        <section>
-            <h2>Filter</h2>
-            <p>Give an option to filter events, by event type, date, etc..</p>
-        </section>
-    </main>
+  <!-- Main Content -->
+  <main>
+    <!-- Filter Section -->
+    <section id="filter" class="filter-section">
+      <h2>Filter Events</h2>
+      <div class="filter-options">
+        <select id="event-type" aria-label="Event Type">
+          <option value="">All Types</option>
+        </select>
+        <select id="location" aria-label="Location">
+          <option value="">All Locations</option>
+        </select>
+        <input type="date" id="event-date" placeholder="Select Date" aria-label="Event Date">
+        <button class="filter-button" onclick="fetchAndRenderEvents()">Apply Filters</button>
+      </div>
+    </section>
 
+    <!-- Loading Indicator -->
+    <div id="loading" class="loading hidden">Loading events...</div>
+
+    <!-- Events Section -->
+    <section id="events" class="events-section">
+      <h2>Upcoming Events</h2>
+      <div class="event-cards"></div>
+    </section>
+
+    <!-- View Cart Button at the Bottom -->
+    <div class="view-cart-bottom">
+      <button id="view-cart">View Cart</button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>Contact us: info@eventmanager.com</p>
+    <p>&copy; 2024 Event Manager. All Rights Reserved.</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+    import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "event-manager-11130.firebaseapp.com",
+      projectId: "event-manager-11130",
+      storageBucket: "event-manager-11130.appspot.com",
+      messagingSenderId: "315869204176",
+      appId: "1:315869204176:web:87b236d07bdd316de318d5",
+      measurementId: "G-DMGP180X0N"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const eventsContainer = document.querySelector('.event-cards');
+    const loadingIndicator = document.getElementById('loading');
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Show loading indicator
+    function showLoading() {
+      loadingIndicator.classList.remove('hidden');
+    }
+
+    // Hide loading indicator
+    function hideLoading() {
+      loadingIndicator.classList.add('hidden');
+    }
+
+    // Populate filters dynamically based on Firestore data
+    async function populateFilters() {
+      const eventTypeSelect = document.getElementById('event-type');
+      const locationSelect = document.getElementById('location');
+
+      const uniqueTypes = new Set();
+      const uniqueLocations = new Set();
+
+      const querySnapshot = await getDocs(collection(db, "Events"));
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        uniqueTypes.add(data.type);
+        uniqueLocations.add(data.location);
+      });
+
+      // Populate event types in the filter dropdown
+      uniqueTypes.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        eventTypeSelect.appendChild(option);
+      });
+
+      // Populate locations in the filter dropdown
+      uniqueLocations.forEach(location => {
+        const option = document.createElement('option');
+        option.value = location;
+        option.textContent = location;
+        locationSelect.appendChild(option);
+      });
+    }
+
+    // Add event to cart
+    function addToCart(eventData) {
+      cart.push(eventData);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert("Event added to cart!");
+      
+    }
+
+    // Redirect to checkout.html to view cart items
+    document.getElementById('view-cart').addEventListener('click', () => {
+      window.location.href = 'checkout.html';
+    });
+
+    // Create event card with "Add to Cart" button
+    function createEventCard(eventData) {
+      const card = document.createElement('div');
+      card.classList.add('event-card');
+
+      const title = document.createElement('h3');
+      title.textContent = eventData.title || "Untitled Event";
+      card.appendChild(title);
+
+      const details = ['artist', 'date', 'time', 'location', 'type'];
+      details.forEach(detail => {
+        const p = document.createElement('p');
+        p.textContent = `${detail.charAt(0).toUpperCase() + detail.slice(1)}: ${eventData[detail] || "N/A"}`;
+        card.appendChild(p);
+      });
+
+      const cartButton = document.createElement('button');
+      cartButton.textContent = 'View Tickets';
+      cartButton.classList.add('select-button');
+
+      //modify to add tickets chosen through seating chart ************ //
+      cartButton.onclick = () => addToCart(eventData);
+      card.appendChild(cartButton);
+
+      return card;
+    }
+
+    // Fetch all events and apply filters locally
+    async function fetchAndRenderEvents() {
+      showLoading();
+      eventsContainer.innerHTML = '';
+
+      const eventType = document.getElementById('event-type').value;
+      const location = document.getElementById('location').value;
+      const eventDate = document.getElementById('event-date').value;
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "Events"));
+        let filteredEvents = [];
+
+        // Filter events based on selected filters
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+
+          // Apply filter conditions locally
+          const matchesType = !eventType || data.type === eventType;
+          const matchesLocation = !location || data.location === location;
+          const matchesDate = !eventDate || data.date === eventDate; // Ensuring the date format matches
+
+          if (matchesType && matchesLocation && matchesDate) {
+            filteredEvents.push(data);
+          }
+        });
+
+        if (filteredEvents.length === 0) {
+          eventsContainer.innerHTML = '<p>No events found for the selected filters.</p>';
+        } else {
+          filteredEvents.forEach((eventData) => {
+            const eventCard = createEventCard(eventData);
+            eventsContainer.appendChild(eventCard);
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        eventsContainer.innerHTML = '<p>Failed to load events. Please try again later.</p>';
+      }
+
+      hideLoading();
+    }
+
+    // Initial population of filters and event load
+    populateFilters();
+    fetchAndRenderEvents();
+  </script>
 </body>
 </html>
