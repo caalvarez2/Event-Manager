@@ -157,6 +157,7 @@
       //modify to add tickets chosen through seating chart ************ //
       cartButton.onclick = () => addToCart(eventData);
       card.appendChild(cartButton);
+      cartButton.onclick = () => window.location.href = "seating.html"
 
       return card;
     }
