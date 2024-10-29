@@ -17,8 +17,6 @@
   <header class="navbar">
     <div class="navbar-brand">Event Manager</div>
     <nav>
-      <a href="#events">Events</a>
-      <a href="#filter">Filter</a>
       <button class="signin-button"><a href="login.html">Sign In</a></button>
     </nav>
   </header>
@@ -29,26 +27,30 @@
     <section id="filter" class="filter-section">
       <h2>Filter Events</h2>
       <div class="filter-options">
-        <select>
-          <option value="">Event Type</option>
-          <option value="Concert">Concert</option>
-          <option value="Sports">Sports</option>
-          <option value="Theater">Theater</option>
+        <select id="event-type" aria-label="Event Type">
+          <option value="">All Types</option>
         </select>
-        <select>
-          <option value="">Location</option>
-          <option value="online">Online</option>
-          <option value="onsite">Onsite</option>
+        <select id="location" aria-label="Location">
+          <option value="">All Locations</option>
         </select>
-        <input type="date" placeholder="Select Date">
+        <input type="date" id="event-date" placeholder="Select Date" aria-label="Event Date">
+        <button class="filter-button" onclick="fetchAndRenderEvents()">Apply Filters</button>
       </div>
     </section>
+
+    <!-- Loading Indicator -->
+    <div id="loading" class="loading hidden">Loading events...</div>
 
     <!-- Events Section -->
     <section id="events" class="events-section">
       <h2>Upcoming Events</h2>
       <div class="event-cards"></div>
     </section>
+
+    <!-- View Cart Button at the Bottom -->
+    <div class="view-cart-bottom">
+      <button id="view-cart">View Cart</button>
+    </div>
   </main>
 
   <!-- Footer -->
@@ -58,87 +60,149 @@
   </footer>
 
   <script type="module">
-    // Import Firebase modules and initialize Firebase
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
     import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
-    // Firebase configuration
     const firebaseConfig = {
-        apiKey: "AIzaSyBxQrigYRQ4Fj3G9r2nUA7k54dBo0kcKsg",
-        authDomain: "event-manager-11130.firebaseapp.com",
-        projectId: "event-manager-11130",
-        storageBucket: "event-manager-11130.appspot.com",
-        messagingSenderId: "315869204176",
-        appId: "1:315869204176:web:87b236d07bdd316de318d5",
-        measurementId: "G-DMGP180X0N"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "event-manager-11130.firebaseapp.com",
+      projectId: "event-manager-11130",
+      storageBucket: "event-manager-11130.appspot.com",
+      messagingSenderId: "315869204176",
+      appId: "1:315869204176:web:87b236d07bdd316de318d5",
+      measurementId: "G-DMGP180X0N"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
-    // Reference to the events section in the HTML
     const eventsContainer = document.querySelector('.event-cards');
+    const loadingIndicator = document.getElementById('loading');
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Function to create an event card element based on Firestore data
+    // Show loading indicator
+    function showLoading() {
+      loadingIndicator.classList.remove('hidden');
+    }
+
+    // Hide loading indicator
+    function hideLoading() {
+      loadingIndicator.classList.add('hidden');
+    }
+
+    // Populate filters dynamically based on Firestore data
+    async function populateFilters() {
+      const eventTypeSelect = document.getElementById('event-type');
+      const locationSelect = document.getElementById('location');
+
+      const uniqueTypes = new Set();
+      const uniqueLocations = new Set();
+
+      const querySnapshot = await getDocs(collection(db, "Events"));
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        uniqueTypes.add(data.type);
+        uniqueLocations.add(data.location);
+      });
+
+      // Populate event types in the filter dropdown
+      uniqueTypes.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        eventTypeSelect.appendChild(option);
+      });
+
+      // Populate locations in the filter dropdown
+      uniqueLocations.forEach(location => {
+        const option = document.createElement('option');
+        option.value = location;
+        option.textContent = location;
+        locationSelect.appendChild(option);
+      });
+    }
+
+    // Add event to cart
+    function addToCart(eventData) {
+      cart.push(eventData);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert("Event added to cart!");
+    }
+
+    // Redirect to checkout.html to view cart items
+    document.getElementById('view-cart').addEventListener('click', () => {
+      window.location.href = 'checkout.html';
+    });
+
+    // Create event card with "Add to Cart" button
     function createEventCard(eventData) {
       const card = document.createElement('div');
       card.classList.add('event-card');
 
-      const infoDiv = document.createElement('div');
-      infoDiv.classList.add('event-info');
-
       const title = document.createElement('h3');
-      title.textContent = eventData.title ? eventData.title : "Untitled Event";
-      infoDiv.appendChild(title);
+      title.textContent = eventData.title || "Untitled Event";
+      card.appendChild(title);
 
-      const artist = document.createElement('p');
-      artist.textContent = eventData["artist"] ? `Artist/s: ${eventData["artist"]}` : "Artist/s: N/A";
-      infoDiv.appendChild(artist);
+      const details = ['artist', 'date', 'time', 'location', 'type'];
+      details.forEach(detail => {
+        const p = document.createElement('p');
+        p.textContent = `${detail.charAt(0).toUpperCase() + detail.slice(1)}: ${eventData[detail] || "N/A"}`;
+        card.appendChild(p);
+      });
 
-      const date = document.createElement('p');
-      date.textContent = eventData.date ? `Date: ${eventData.date}` : "Date: Unknown";
-      infoDiv.appendChild(date);
+      const cartButton = document.createElement('button');
+      cartButton.textContent = 'Add to Cart';
+      cartButton.classList.add('select-button');
+      cartButton.onclick = () => addToCart(eventData);
+      card.appendChild(cartButton);
 
-      const time = document.createElement('p');
-      time.textContent = eventData.Time ? `time: ${eventData.time}` : "Time: TBA";
-      infoDiv.appendChild(time);
-
-      const location = document.createElement('p');
-      location.textContent = eventData.location ? `Location: ${eventData.location}` : "Location: TBA";
-      infoDiv.appendChild(location);
-
-      const type = document.createElement('p');
-      type.textContent = eventData.type ? `Type: ${eventData.type}` : "Type: General";
-      infoDiv.appendChild(type);
-
-      card.appendChild(infoDiv);
       return card;
     }
 
-    // Function to fetch and render events
+    // Fetch all events and apply filters locally
     async function fetchAndRenderEvents() {
+      showLoading();
+      eventsContainer.innerHTML = '';
+
+      const eventType = document.getElementById('event-type').value;
+      const location = document.getElementById('location').value;
+      const eventDate = document.getElementById('event-date').value;
+
       try {
-        console.log("Fetching events from Firestore...");
         const querySnapshot = await getDocs(collection(db, "Events"));
+        let filteredEvents = [];
 
-        if (querySnapshot.empty) {
-          console.log("No events found in Firestore.");
-          return;
-        }
-
+        // Filter events based on selected filters
         querySnapshot.forEach((doc) => {
-          const eventData = doc.data();
-          console.log("Event data:", eventData);
-          const eventCard = createEventCard(eventData);
-          eventsContainer.appendChild(eventCard);
+          const data = doc.data();
+
+          // Apply filter conditions locally
+          const matchesType = !eventType || data.type === eventType;
+          const matchesLocation = !location || data.location === location;
+          const matchesDate = !eventDate || data.date === eventDate; // Ensuring the date format matches
+
+          if (matchesType && matchesLocation && matchesDate) {
+            filteredEvents.push(data);
+          }
         });
+
+        if (filteredEvents.length === 0) {
+          eventsContainer.innerHTML = '<p>No events found for the selected filters.</p>';
+        } else {
+          filteredEvents.forEach((eventData) => {
+            const eventCard = createEventCard(eventData);
+            eventsContainer.appendChild(eventCard);
+          });
+        }
       } catch (error) {
         console.error("Error fetching events:", error);
+        eventsContainer.innerHTML = '<p>Failed to load events. Please try again later.</p>';
       }
+
+      hideLoading();
     }
 
-    // Call the function to fetch and display the events
+    // Initial population of filters and event load
+    populateFilters();
     fetchAndRenderEvents();
   </script>
 </body>
