@@ -50,8 +50,8 @@
   
   .form-container .btn {
     border-radius: 20px;
-    border: 1px solid #ff7043;
-    background-color: #ff7043;
+    border: 1px solid rgb(104, 168, 246);
+    background-color: rgb(104, 168, 246);
     color: #ffffff;
     font-size: 14px;
     font-weight: bold;
@@ -63,7 +63,7 @@
   }
   
   .form-container .btn:hover {
-    background-color: #ff5e3a;
+    background-color: rgb(104, 168, 246);
   }
   
   /* Link Styling */
@@ -74,7 +74,7 @@
   }
   
   .form-container a {
-    color: #ff7043;
+    color: rgb(104, 168, 246);
     text-decoration: none;
   }
   

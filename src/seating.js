@@ -92,6 +92,7 @@ function addToCart() {
             occupiedSeats.push(seatLabel);
         }
     });
+    localStorage.setItem('selectedSeats', JSON.stringify(occupiedSeats));
     selectedSeats = []; 
     updateSelectedSeatsList();
 }

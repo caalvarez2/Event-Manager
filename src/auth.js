@@ -9,10 +9,12 @@ const createAccountForm = document.getElementById("createAccount")
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const uid = user.uid;
+        localStorage.setItem('userId', uid);
         console.log(uid)
         console.log("Signed IN onAuthState")
     } else {
         console.log("Signed OUT onAuthState")
+        localStorage.removeItem('userId');
     }
 })
 
