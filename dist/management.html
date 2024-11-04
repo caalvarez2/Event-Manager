@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Manager Page</title>
+</head>
+<body>
+    <h1>Management Settings</h1>
+    <h3>Add New Events</h3>
+    <form id="addEventForm" class="add_event">
+        <label for="title">Event Title:</label>
+        <input type="text" name="title" required><br>
+        <label for="artist/s">Artist/s:</label>
+        <input type="text" name="artist/s" required><br>
+        <label for="location">Location:</label>
+        <input type="text" name="location" required><br>
+        <label for="date">Date:</label>
+        <input type="date" name="date" required><br>
+        <label for="time">Time:</label>
+        <input type="time" name="time" required><br>
+        <label for="type">Event Type:</label>
+        <select name="type" required>
+            <option value="">Select Event Type</option>
+            <option value="concert">Concert</option>
+            <option value="sports">Sports</option>
+            <option value="theater">Theater</option>
+            <option value="festival">Festival</option>
+        </select>
+        <br>
+        <button>Add Event</button>
+    </form>
+    <hr>
+    <h3>Cancel Events</h3>
+    <form id="cancelEventForm" class="cancel_event">
+        <label for="event_id">Event ID:</label>
+        <input type="text" name="event_id" required>
+        <br>
+        <button>Cancel</button>
+    </form>
+    <hr>
+    <h3>Update Events</h3>
+    <form id="updateEventForm" class="update_event">
+        <label for="event_id">Event ID:</label>
+        <input type="text" name="event_id" required><br>
+        <label for="date">Date:</label>
+        <input type="date" name="date" required><br>
+        <label for="time">Time:</label>
+        <input type="time" name="time" required><br>
+        <br>
+        <button>Update</button>
+    </form>
+    <hr>
+    <h3> Sign Out </h3>
+    <form class="signOut" id="signOut">
+        <input type="submit" value="Sign Out">
+    </form>
+
+    <script src="./bundles/index.bundle.js" type="module"></script>
+
+</body>
+<style>
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+    }
+    
+    h1, h3 {
+        color: #ffffff;
+    }
+    
+    form {
+        background-color: #1e1e1e;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+    }
+
+    label {
+        color: #bbbbbb;
+    }
+    
+    input[type="text"], input[type="date"], input[type="time"], select {
+        background-color: #2a2a2a;
+        color: #ffffff;
+        border: none;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        width: 95%;
+    }
+
+    input[type="submit"], button {
+        background-color: rgb(104, 168, 246);
+        color: #ffffff;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    input[type="submit"]:hover, button:hover {
+        background-color: rgb(104, 168, 246);
+    }
+
+    hr {
+        border: 1px solid #333333;
+        width: 80%;
+        margin: 20px 0;
+    }
+    
+    .add_event, .cancel_event, .update_event, .signOut {
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+    }
+</style>
+</html>
