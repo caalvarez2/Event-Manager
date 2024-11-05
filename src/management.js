@@ -18,6 +18,21 @@ addEventForm.addEventListener('submit', async (e) => {
     const time = addEventForm.time.value;
     const type = addEventForm.type.value;
 
+    let seatMap = [];
+    const rows = 17;
+    const seatsPerRow = 23;
+
+    for (let charCode = 'A'.charCodeAt(0); charCode < 'A'.charCodeAt(0) + rows; charCode++) {
+        let row = {
+            row: String.fromCharCode(charCode),
+            seats: Array.from({ length: seatsPerRow }, (_, i) => ({
+                number: `${String.fromCharCode(charCode)}${i + 1}`,
+                occupied: 0  // Initialize all seats as unoccupied
+            }))
+        };
+        seatMap.push(row);
+    }
+
     try {
         await addDoc(collection(db, 'Events'), {
             title,
@@ -25,7 +40,8 @@ addEventForm.addEventListener('submit', async (e) => {
             location,
             date,
             time,
-            type
+            type,
+            seatMap
         });
         addEventForm.reset();
         alert('Event added successfully!');

@@ -135,7 +135,7 @@
     });
 
     // Create event card with "Add to Cart" button
-    function createEventCard(eventData) {
+    function createEventCard(eventData, eventId) {
       const card = document.createElement('div');
       card.classList.add('event-card');
 
@@ -155,9 +155,10 @@
       cartButton.classList.add('select-button');
 
       //modify to add tickets chosen through seating chart ************ //
-      cartButton.onclick = () => addToCart(eventData);
+      cartButton.onclick = () => {
+        window.location.href = `seating.html?eventId=${eventId}`;
+      };
       card.appendChild(cartButton);
-      cartButton.onclick = () => window.location.href = "seating.html"
 
       return card;
     }
@@ -178,6 +179,7 @@
         // Filter events based on selected filters
         querySnapshot.forEach((doc) => {
           const data = doc.data();
+          const eventId = doc.id;
 
           // Apply filter conditions locally
           const matchesType = !eventType || data.type === eventType;
@@ -185,15 +187,15 @@
           const matchesDate = !eventDate || data.date === eventDate; // Ensuring the date format matches
 
           if (matchesType && matchesLocation && matchesDate) {
-            filteredEvents.push(data);
+            filteredEvents.push({data,eventId});
           }
         });
 
         if (filteredEvents.length === 0) {
           eventsContainer.innerHTML = '<p>No events found for the selected filters.</p>';
         } else {
-          filteredEvents.forEach((eventData) => {
-            const eventCard = createEventCard(eventData);
+          filteredEvents.forEach(({data,eventId}) => {
+            const eventCard = createEventCard(data, eventId);
             eventsContainer.appendChild(eventCard);
           });
         }
