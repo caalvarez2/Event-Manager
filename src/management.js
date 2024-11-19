@@ -1,5 +1,5 @@
 import app from './config.js';
-import { getFirestore, collection, addDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, doc, deleteDoc, updateDoc, getDocs, query, where } from "firebase/firestore";
 
 const db = getFirestore();
 
@@ -17,6 +17,14 @@ addEventForm.addEventListener('submit', async (e) => {
     const date = addEventForm.date.value;
     const time = addEventForm.time.value;
     const type = addEventForm.type.value;
+    const vipPrice = parseFloat(addEventForm.vip_price.value);
+    const silverPrice = parseFloat(addEventForm.silver_price.value);
+    const bronzePrice = parseFloat(addEventForm.bronze_price.value);
+
+    if (isNaN(vipPrice) || isNaN(silverPrice) || isNaN(bronzePrice)) {
+        alert('Please enter valid prices for VIP, Silver, and Bronze seats.');
+        return;
+    }
 
     let seatMap = [];
     const rows = 17;
@@ -41,6 +49,9 @@ addEventForm.addEventListener('submit', async (e) => {
             date,
             time,
             type,
+            vipPrice,
+            silverPrice,
+            bronzePrice,
             seatMap
         });
         addEventForm.reset();
@@ -55,11 +66,22 @@ addEventForm.addEventListener('submit', async (e) => {
 cancelEventForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const eventId = cancelEventForm.event_id.value;
+    const eventName = cancelEventForm.event_name.value;
+
     try {
-        await deleteDoc(doc(db, 'Events', eventId));
+        const eventsCollection = collection(db, 'Events');
+        const q = query(eventsCollection, where("title", "==", eventName));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            alert('No event found with the given name.');
+            return;
+        }
+        const eventDoc = querySnapshot.docs[0];
+        await deleteDoc(doc(db, 'Events', eventDoc.id));
+
         cancelEventForm.reset();
-        alert('Event canceled successfully!');
+        alert(`Event "${eventName}" canceled successfully!`);
     } catch (error) {
         console.error("Error canceling event: ", error);
         alert('Failed to cancel event.');
