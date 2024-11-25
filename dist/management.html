@@ -19,6 +19,12 @@
         <input type="date" name="date" required><br>
         <label for="time">Time:</label>
         <input type="time" name="time" required><br>
+        <label for="vip_price">VIP Price:</label>
+        <input type="number" name="vip_price" placeholder="Enter VIP price" step="0.01" required><br>
+        <label for="silver_price">Silver Price:</label>
+        <input type="number" name="silver_price" placeholder="Enter Silver price" step="0.01" required><br>
+        <label for="bronze_price">Bronze Price:</label>
+        <input type="number" name="bronze_price" placeholder="Enter Bronze price" step="0.01" required><br>
         <label for="type">Event Type:</label>
         <select name="type" required>
             <option value="">Select Event Type</option>
@@ -33,16 +39,16 @@
     <hr>
     <h3>Cancel Events</h3>
     <form id="cancelEventForm" class="cancel_event">
-        <label for="event_id">Event ID:</label>
-        <input type="text" name="event_id" required>
+        <label for="event_name">Event Name:</label>
+        <input type="text" name="event_name" required>
         <br>
         <button>Cancel</button>
     </form>
     <hr>
     <h3>Update Events</h3>
     <form id="updateEventForm" class="update_event">
-        <label for="event_id">Event ID:</label>
-        <input type="text" name="event_id" required><br>
+        <label for="event_name">Event Name:</label>
+        <input type="text" name="event_name" required><br>
         <label for="date">Date:</label>
         <input type="date" name="date" required><br>
         <label for="time">Time:</label>
@@ -55,9 +61,9 @@
     <form class="signOut" id="signOut">
         <input type="submit" value="Sign Out">
     </form>
-
+ 
     <script src="./bundles/index.bundle.js" type="module"></script>
-
+ 
 </body>
 <style>
     body {
@@ -84,12 +90,12 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         margin-bottom: 20px;
     }
-
+ 
     label {
         color: #bbbbbb;
     }
     
-    input[type="text"], input[type="date"], input[type="time"], select {
+    input[type="text"], input[type="date"], input[type="time"], input[type="number"], select {
         background-color: #2a2a2a;
         color: #ffffff;
         border: none;
@@ -98,7 +104,7 @@
         border-radius: 5px;
         width: 95%;
     }
-
+ 
     input[type="submit"], button {
         background-color: rgb(104, 168, 246);
         color: #ffffff;
@@ -109,11 +115,11 @@
         width: 100%;
         font-size: 16px;
     }
-
+ 
     input[type="submit"]:hover, button:hover {
         background-color: rgb(104, 168, 246);
     }
-
+ 
     hr {
         border: 1px solid #333333;
         width: 80%;

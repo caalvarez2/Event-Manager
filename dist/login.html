@@ -8,33 +8,6 @@
         <link rel="stylesheet" href="auth-style.css">
     </head>
     <body>
-       <!-- <h1>Logging-In</h1>
-        <h3> Create Account </h3>
-        <form id="createAccount">
-           <label for="name"> Name: </label>
-           <input type="text" id="name"/></br>
-           <label for="email"> Email: </label>
-           <input type="text" id="email"/></br>
-           <label for="password"> Password: </label>
-           <input type="password" id="password"/></br>
-           <input type="submit" value="Create Account"/>
-        </form>
-        <hr>
-        <h3> Sign In </h3>
-        <form id="signIn">
-           <label for="email"> Email: </label>
-           <input type="text" id="email"/></br>
-           <label for="password"> Password: </label>
-           <input type="password" id="password"/></br>
-           <input type="submit" value="Sign In"/>
-        </form>
-        <hr>
-        <h3> Sign Out </h3>
-        <form id="signOut">
-           <input type="submit" value="Sign Out">
-        </form>
-            -->
-
         <div class="container">
             <!-- Sign In Form -->
             <div class="form-container" id="signIn">
@@ -49,15 +22,28 @@
 
             <!-- Sign Up Form -->
             <div class="form-container" id="createAccount" style="display: none;">
-                <form action="#">
+                <form action="#" id="createAccountForm">
                     <h1>Create Account</h1>
                     <input type="text" id="signUpName" placeholder="Name" required />
                     <input type="email" id="signUpEmail" placeholder="Email" required />
                     <input type="password" id="signUpPassword" placeholder="Password" required />
-                    <button class="btn" type="submit" value="Sign In">Sign Up</button>
+                    
+                    <!-- Dropdown for role selection -->
+                    <label for="accountRole">Select Role:</label>
+                    <select id="accountRole" required>
+                        <option value="customer">Customer</option>
+                        <option value="manager">Manager</option>
+                    </select>
+                    
+                    <button class="btn" type="submit" value="Sign Up">Sign Up</button>
                     <p>Already have an account? <a href="#" id="signInLink">Sign In</a></p>
                 </form>
             </div>
+
+            <div id="signOutContainer">
+                <button id="backButton"> Go Back </button>
+            </div>
+            
         </div>
 
         <script src="./bundles/login.bundle.js"></script>
@@ -78,78 +64,10 @@
         document.getElementById('signIn').style.display = 'block';
         document.getElementById('createAccount').style.display = 'none';
     });
+
+    const backButton = document.getElementById("backButton");
+
+    backButton.addEventListener("click", (event) => {
+        window.location.href = "index.html"
+    })
 </script>
-<!--<style>
-    body {
-        background-color: #121212;
-        color: #e0e0e0;
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        margin: 0;
-        padding: 20px;
-    }
-    
-    h1, h3 {
-        color: #ffffff;
-    }
-   
-    form {
-        background-color: #1e1e1e;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        margin-bottom: 20px;
-    }
-
-    label {
-        color: #bbbbbb;
-    }
-    
-    input[type="text"], input[type="date"], input[type="time"], select {
-        background-color: #2a2a2a;
-        color: #ffffff;
-        border: none;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        width: 95%;
-    }
-    #password{
-        background-color: #2a2a2a;
-        color: #ffffff;
-        border: none;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        width: 95%;
-    }
-    input[type="submit"], button {
-        background-color: rgb(104, 168, 246);
-        color: #ffffff;
-        border: none;
-        padding: 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        width: 100%;
-        font-size: 16px;
-    }
-
-    input[type="submit"]:hover, button:hover {
-        background-color: rgb(104, 168, 246);
-    }
-
-    hr {
-        border: 1px solid #333333;
-        width: 80%;
-        margin: 20px 0;
-    }
-    #signOut, #signIn, #createAccount{
-        display: flex;
-        flex-direction: column;
-        width: 30%;
-    }
-</style>-->

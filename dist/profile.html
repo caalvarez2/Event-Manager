@@ -1,0 +1,39 @@
+<head>
+    <title>Profile</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="profile-container">
+    <header class="navbar">
+    <div class="navbar-brand" id ="header-title"> Profile </div>
+    </header>
+        <div class="profile-nav">
+            <ul>
+                <li><a href="#payment-history"> Purchased Tickets History </a></li>
+            </ul>
+        </div>
+                    
+        <!-- Section for payment history -->
+        <section id="payment-history" class="profile-section">
+            <h2>Recent Purchases:</h2>
+            <div class="ticket-container">
+                <div class="ticket">
+                </div>
+            </div>
+        </section>
+
+        <!-- Replace the form with a standalone button -->
+        <div id="signOutContainer">
+            <button id="signOut">Sign Out</button>
+            <button id="backButton"> Go Back </button>
+        </div>
+
+    </div>
+
+    <!-- Include QRious Script -->
+    <script src="https://cdn.jsdelivr.net/npm/qrious/dist/qrious.min.js"></script>
+</body>
+</html>
+
+<script src="bundles/profile.bundle.js"></script>
+<script src="bundles/auth.bundle.js"></script>

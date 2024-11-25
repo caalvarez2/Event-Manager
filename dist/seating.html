@@ -21,13 +21,18 @@
         <div class="selected-tickets">
             <h2>Selected Tickets</h2>
             <ul id="selectedSeatsList"></ul>
-            <a href="checkout.html" id="checkoutButton" class="button">Checkout</a>
+            <button id="checkoutButton">Checkout</button>
         </div>
     </div>
     
     <button id="addToCart">Add to Cart</button>
     <button id="resetSelection">Reset Selection</button>
 
-    <script src="/src/seating.js"></script>
+    <div id="signOutContainer">
+        <button id="backButton"> Go Back </button>
+    </div>
+
+    <script src="./bundles/seating.bundle.js" type="module"></script>
 </body>
 </html>
+ 
