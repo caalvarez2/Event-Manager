@@ -1,6 +1,6 @@
 import app from './config.js';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, updateDoc, arrayUnion, increment } from "firebase/firestore";
+import { getFirestore, doc, updateDoc, arrayUnion, increment, getDoc } from "firebase/firestore";
 
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         purchases: arrayUnion(eventId), // Add eventId to purchases array
                         ticketCount: increment(seats.length), // Increment ticketCount by the number of seats
                     });
+                    await updateSeatMap(eventId, seats);
                     alert("Thank you for your purchase! Your tickets have been updated.");
                     window.location.href = "index.html"; // Redirect to the index page
                 } catch (error) {
@@ -71,8 +72,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// Update occupied seats in firebase
+const updateSeatMap = async (eventId, purchasedSeats) => {
+    const eventRef = doc(db, "Events", eventId);
+
+    try {
+        const eventDoc = await getDoc(eventRef);
+        if (eventDoc.exists()) {
+            const seatMap = eventDoc.data().seatMap;
+            seatMap.forEach(row => {
+                row.seats.forEach(seat => {
+                    if (purchasedSeats.includes(seat.number)) {
+                        seat.occupied = 1;
+                    }
+                });
+            });
+            await updateDoc(eventRef, { seatMap });
+            console.log("Seat map updated successfully.");
+        } else {
+            console.error("Event not found.");
+        }
+    } catch (error) {
+        console.error("Error updating seat map:", error);
+    }
+};
+
 const backButton = document.getElementById("backButton");
 
 backButton.addEventListener("click", (event) => {
-    window.location.href = "index.html"
-})
+    window.location.href = "index.html";
+});
