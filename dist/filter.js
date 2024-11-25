@@ -39,14 +39,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// Show loading indicator
 function showLoading() {
   loadingIndicator.classList.remove('hidden');
 }
 
+// Hide loading indicator
 function hideLoading() {
   loadingIndicator.classList.add('hidden');
 }
 
+// Populate filters dynamically based on Firestore data
 async function populateFilters() {
   const eventTypeSelect = document.getElementById('event-type');
   const locationSelect = document.getElementById('location');
@@ -54,43 +57,45 @@ async function populateFilters() {
   const uniqueTypes = new Set();
   const uniqueLocations = new Set();
 
-  try {
-    const querySnapshot = await getDocs(collection(db, "Events"));
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      uniqueTypes.add(data.type);
-      uniqueLocations.add(data.location);
-    });
+  const querySnapshot = await getDocs(collection(db, "Events"));
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    uniqueTypes.add(data.type);
+    uniqueLocations.add(data.location);
+  });
 
-    uniqueTypes.forEach(type => {
-      const option = document.createElement('option');
-      option.value = type;
-      option.textContent = type;
-      eventTypeSelect.appendChild(option);
-    });
+  // Populate event types in the filter dropdown
+  uniqueTypes.forEach(type => {
+    const option = document.createElement('option');
+    option.value = type;
+    option.textContent = type;
+    eventTypeSelect.appendChild(option);
+  });
 
-    uniqueLocations.forEach(location => {
-      const option = document.createElement('option');
-      option.value = location;
-      option.textContent = location;
-      locationSelect.appendChild(option);
-    });
-  } catch (error) {
-    console.error("Error populating filters:", error);
-  }
+  // Populate locations in the filter dropdown
+  uniqueLocations.forEach(location => {
+    const option = document.createElement('option');
+    option.value = location;
+    option.textContent = location;
+    locationSelect.appendChild(option);
+  });
 }
 
+// Add event to cart
 function addToCart(eventData) {
   cart.push(eventData);
   localStorage.setItem('cart', JSON.stringify(cart));
   alert("Event added to cart!");
+  
 }
 
+// Redirect to checkout.html to view cart items
 document.getElementById('view-cart').addEventListener('click', () => {
   window.location.href = 'checkout.html';
 });
 
-function createEventCard(eventData) {
+// Create event card with "Add to Cart" button
+function createEventCard(eventData, eventId) {
   const card = document.createElement('div');
   card.classList.add('event-card');
 
@@ -109,15 +114,16 @@ function createEventCard(eventData) {
   cartButton.textContent = 'View Tickets';
   cartButton.classList.add('select-button');
 
+  //modify to add tickets chosen through seating chart ************ //
   cartButton.onclick = () => {
-    addToCart(eventData);
-    window.location.href = "seating.html";
+    window.location.href = `seating.html?eventId=${eventId}`;
   };
-
   card.appendChild(cartButton);
+
   return card;
 }
 
+// Fetch all events and apply filters locally
 async function fetchAndRenderEvents() {
   showLoading();
   eventsContainer.innerHTML = '';
@@ -130,23 +136,26 @@ async function fetchAndRenderEvents() {
     const querySnapshot = await getDocs(collection(db, "Events"));
     let filteredEvents = [];
 
+    // Filter events based on selected filters
     querySnapshot.forEach((doc) => {
       const data = doc.data();
+      const eventId = doc.id;
 
+      // Apply filter conditions locally
       const matchesType = !eventType || data.type === eventType;
       const matchesLocation = !location || data.location === location;
-      const matchesDate = !eventDate || data.date === eventDate;
+      const matchesDate = !eventDate || data.date === eventDate; // Ensuring the date format matches
 
       if (matchesType && matchesLocation && matchesDate) {
-        filteredEvents.push(data);
+        filteredEvents.push({data,eventId});
       }
     });
 
     if (filteredEvents.length === 0) {
       eventsContainer.innerHTML = '<p>No events found for the selected filters.</p>';
     } else {
-      filteredEvents.forEach((eventData) => {
-        const eventCard = createEventCard(eventData);
+      filteredEvents.forEach(({data,eventId}) => {
+        const eventCard = createEventCard(data, eventId);
         eventsContainer.appendChild(eventCard);
       });
     }
@@ -158,7 +167,6 @@ async function fetchAndRenderEvents() {
   hideLoading();
 }
 
-window.fetchAndRenderEvents = fetchAndRenderEvents;
-
+// Initial population of filters and event load
 populateFilters();
 fetchAndRenderEvents();
