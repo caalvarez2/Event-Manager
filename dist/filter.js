@@ -79,15 +79,12 @@ async function populateFilters() {
   });
 }
 
-// Add event to cart
 function addToCart(eventData) {
   cart.push(eventData);
   localStorage.setItem('cart', JSON.stringify(cart));
   alert("Event added to cart!");
-  
 }
 
-// Redirect to checkout.html to view cart items
 document.getElementById('view-cart').addEventListener('click', () => {
   window.location.href = 'checkout.html';
 });
@@ -127,7 +124,6 @@ function createEventCard(eventData, eventId) {
   card.appendChild(cartButton);
   return card;
 }
-
 
 document.getElementById('apply-filters-button').addEventListener('click', fetchAndRenderEvents);
 
