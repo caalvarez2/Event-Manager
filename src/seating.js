@@ -1,8 +1,25 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBxQrigYRQ4Fj3G9r2nUA7k54dBo0kcKsg",
+  authDomain: "event-manager-11130.firebaseapp.com",
+  projectId: "event-manager-11130",
+  storageBucket: "event-manager-11130.appspot.com",
+  messagingSenderId: "315869204176",
+  appId: "1:315869204176:web:87b236d07bdd316de318d5",
+  measurementId: "G-DMGP180X0N"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const totalRows = 17;
 const totalCols = 23;
 const seatSpacing = 35;
 let selectedSeats = [];
 let occupiedSeats = [];
+let occupiedSeatsMap = [];
 let vipPrice = 0;
 let silverPrice = 0;
 let bronzePrice = 0;
@@ -50,9 +67,75 @@ const bronzeSeats = [
     'Q19', 'Q20', 'Q21', 'Q22', 'Q23'
 ];
 
+function getEventIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("eventId");
+}
+
+async function fetchEventDetails(eventId) {
+    try {
+        const eventDoc = doc(db, "Events", eventId);
+        const eventSnapshot = await getDoc(eventDoc);
+
+        if (eventSnapshot.exists()) {
+            const eventData = eventSnapshot.data();
+            const seatMap = eventData.seatMap || [];
+            vipPrice = eventData.vipPrice || 0;
+            silverPrice = eventData.silverPrice || 0;
+            bronzePrice = eventData.bronzePrice || 0;
+            
+            occupiedSeatsMap = []; 
+
+            seatMap.forEach(row => {
+                row.seats.forEach(seat => {
+                    if (seat.occupied === 1) {
+                        occupiedSeatsMap.push(seat.number); 
+                    }
+                });
+            });
+
+            console.log("Occupied Seats Map:", occupiedSeatsMap);
+            console.log(occupiedSeats)
+            console.log(vipPrice)
+            console.log(silverPrice)
+            console.log(bronzePrice)
+
+            createSeats(seatMap);
+            markOccupiedSeats();
+            console.log("Event data loaded:", eventData);
+        } else {
+            console.error("No such event found!");
+        }
+    } catch (error) {
+        console.error("Error fetching event details:", error);
+    }
+}
+
+function getSeatPrice(seatLabel) {
+    if (vipSeats.includes(seatLabel)) {
+        return vipPrice;
+    } else if (silverSeats.includes(seatLabel)) {
+        return silverPrice;
+    } else if (bronzeSeats.includes(seatLabel)) {
+        return bronzePrice;
+    }
+    return 0; 
+}
+
+function markOccupiedSeats() {
+    const allSeats = document.querySelectorAll('.seat'); 
+    allSeats.forEach(seatElement => {
+        const seatLabel = seatElement.textContent; 
+        if (occupiedSeatsMap.includes(seatLabel)) {
+            seatElement.classList.add('occupied'); 
+            seatElement.onclick = null;
+        }
+    });
+}
+
 
 // Creating seats
-function createSeats() {
+function createSeats(seatMap) {
     const stadiumContainer = document.querySelector('.stadium-container');
     const performanceArea = document.querySelector('.performance-area');
     const performanceAreaTop = performanceArea.offsetTop;
@@ -60,7 +143,6 @@ function createSeats() {
     const performanceAreaWidth = performanceArea.offsetWidth;
     const performanceAreaHeight = performanceArea.offsetHeight;
 
-    // Generate seats 
     for (let row = 0; row < totalRows; row++) {
         const rowLabel = String.fromCharCode(65 + row);
 
@@ -71,7 +153,6 @@ function createSeats() {
             const topPosition = row * seatSpacing;
             const leftPosition = col * seatSpacing;
 
-            // Skip seats that will be in performance area
             if (
                 topPosition >= performanceAreaTop &&
                 topPosition < performanceAreaTop + performanceAreaHeight &&
@@ -98,37 +179,93 @@ function createSeatElement(label) {
     seatElement.classList.add('seat');
     seatElement.textContent = label;
 
-    seatElement.addEventListener('click', () => toggleSeatSelection(label, seatElement));
+    if (occupiedSeats.includes(label)) {
+        seatElement.classList.add('occupied'); 
+        seatElement.onclick = null; 
+    } else {
+        seatElement.addEventListener('click', () => toggleSeatSelection(label, seatElement));
+    }
 
     return seatElement;
 }
 
 // Select Seats
 function toggleSeatSelection(label, seatElement) {
+    if (seatElement.classList.contains('occupied')) {
+        return; 
+    }
+
+    if (!seatElement.classList.contains('selected') && selectedSeats.length >= 6) {
+        alert("You can only select up to 6 seats.");
+        return;
+    }
+
     if (seatElement.classList.contains('selected')) {
         seatElement.classList.remove('selected');
         selectedSeats = selectedSeats.filter(seat => seat !== label);
-    } else if (!seatElement.classList.contains('occupied')) {
+    } else {
         seatElement.classList.add('selected');
         selectedSeats.push(label);
     }
+    console.log("Selected Seats:", selectedSeats);
 }
 
-// Add selected tickets to the list of the 'cart'
+function removeSeatFromCart(seatLabel) {
+    occupiedSeats = occupiedSeats.filter(seat => seat !== seatLabel);
+    occupiedSeatsMap = occupiedSeatsMap.filter(seat => seat !== seatLabel);
+    const seatElement = Array.from(document.querySelectorAll('.seat')).find(
+        element => element.textContent === seatLabel
+    );
+    if (seatElement) {
+        seatElement.classList.remove('occupied');
+        seatElement.addEventListener('click', () => toggleSeatSelection(seatLabel, seatElement));
+    }
+    updateSelectedSeatsList();
+    console.log(`Seat ${seatLabel} removed from cart and marked as available.`);
+}
+
+
+// Add selected tickets to the list of the cart
 function updateSelectedSeatsList() {
     const selectedSeatsList = document.getElementById('selectedSeatsList');
-    selectedSeatsList.innerHTML = '';
+    selectedSeatsList.innerHTML = ''; 
+    if (occupiedSeats.length > 0) {
+        occupiedSeats.forEach(seat => {
+            const listItem = document.createElement('li');
+            const price = getSeatPrice(seat);
+            listItem.textContent = `${seat} - $${price}`;
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'X'; 
+            removeButton.style.marginLeft = '10px'; 
+            removeButton.style.color = 'white';
+            removeButton.style.backgroundColor = '#FF5722'; 
+            removeButton.style.border = 'none';
+            removeButton.style.borderRadius = '5px';
+            removeButton.style.padding = '2px 6px';
+            removeButton.style.cursor = 'pointer';
+            removeButton.addEventListener('click', () => {
+                removeSeatFromCart(seat);
+            });
 
-    occupiedSeats.forEach(seat => {
-        const listItem = document.createElement('li');
-        listItem.textContent = seat;
-        selectedSeatsList.appendChild(listItem);
-    });
+            listItem.appendChild(removeButton); 
+            selectedSeatsList.appendChild(listItem); 
+        });
+    } else {
+        const noSeatsItem = document.createElement('li');
+        noSeatsItem.textContent = 'No seats added to the cart.';
+        selectedSeatsList.appendChild(noSeatsItem);
+    }
 }
 
 // Move the selected seats to the cart and mark them occupied
-function addToCart() {
-    selectedSeats.forEach(seatLabel => {
+function addToCart() { 
+    const validSeats = selectedSeats.filter(seatLabel => {
+        if (occupiedSeatsMap.includes(seatLabel)) {
+            return false; 
+        }
+        return true; 
+    });
+    validSeats.forEach(seatLabel => {
         document.querySelectorAll('.seat').forEach(seatElement => {
             if (seatElement.textContent === seatLabel) {
                 seatElement.classList.remove('selected');
@@ -139,7 +276,7 @@ function addToCart() {
             occupiedSeats.push(seatLabel);
         }
     });
-    selectedSeats = []; 
+    selectedSeats = [];
     updateSelectedSeatsList();
 }
 
@@ -150,8 +287,41 @@ function resetSelection() {
     updateSelectedSeatsList(); 
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    createSeats();
-    document.getElementById('resetSelection').addEventListener('click', resetSelection);
-    document.getElementById('addToCart').addEventListener('click', addToCart);
+document.addEventListener('DOMContentLoaded', async() => {
+    const eventId = getEventIdFromUrl();
+    if(eventId){
+        await fetchEventDetails(eventId);
+        console.log(eventId)
+        createSeats();
+        markOccupiedSeats();
+        document.getElementById('resetSelection').addEventListener('click', resetSelection);
+        document.getElementById('addToCart').addEventListener('click', addToCart);
+    }else{
+        console.error('No eventid found')
+    }
 });
+
+document.getElementById('checkoutButton').addEventListener('click', () => {
+    if (occupiedSeats.length === 0) {
+        alert("No tickets selected for checkout.");
+        return;
+    }
+    let totalPrice = 0;
+    occupiedSeats.forEach(seat => {
+        totalPrice += getSeatPrice(seat); 
+    });
+
+    const eventId = getEventIdFromUrl()
+    if(!eventId){
+        alert("Event id not found")
+        return;
+    }
+    const queryParams = new URLSearchParams({
+        seats: occupiedSeats.join(','), 
+        totalPrice: totalPrice,
+        eventId: eventId
+    });
+
+    window.location.href = `checkout.html?${queryParams.toString()}`;
+});
+

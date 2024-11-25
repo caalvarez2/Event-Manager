@@ -1,11 +1,12 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #f4f4f4;
+    background-color: #1c1e24; 
+    color: #f4f4f4; 
 }
 
 h1 {
-    color: #333;
+    color: #ffffff;
 }
 
 .legend {
@@ -20,21 +21,22 @@ h1 {
     padding: 8px;
     border-radius: 5px;
     font-size: 14px;
+    color: #ffffff; 
 }
 
 .bowl {
     background-color: #4CAF50;
-    color: white;
+    color: #ffffff; 
 }
 
 .occupied {
-    background-color: #673AB7;
-    color: white;
+    background-color: #673AB7; 
+    color: #ffffff; 
 }
 
 .selected {
     background-color: #FF5722;
-    color: white;
+    color: #ffffff; 
 }
 
 .container {
@@ -48,40 +50,70 @@ h1 {
     position: relative;
     width: 800px;
     height: 600px;
-    background-color: #eee;
+    background-color: #2b2f36; 
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
 }
 
 .performance-area {
     width: 300px;
     height: 160px;
-    background-color: #333;
-    color: white;
+    background-color: #444444;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
     z-index: 1;
+    border-radius: 5px; 
 }
 
 .seat {
     width: 20px;
     height: 20px;
-    background-color: #4CAF50;
+    background-color: #4CAF50; 
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: #ffffff;
     position: absolute;
     font-size: 10px;
     cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.seat:hover {
+    transform: scale(1.1);
+    background-color: #3e8e41; 
 }
 
 .seat.selected {
-    background-color: #FF5722;
+    background-color: #FF5722; 
+}
+
+.seat.occupied {
+    background-color: #673AB7; 
+    color: #ffffff; 
+    cursor: not-allowed; 
+}
+
+button {
+    background-color: #673AB7; 
+    color: #ffffff; 
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #5a2ea5; 
 }
 
 #selected-tickets {
@@ -89,5 +121,32 @@ h1 {
     top: 100px;
     right: 100px;
     font-size: 16px;
-    color: #333;
+    color: #ffffff; 
+}
+
+button {
+    background-color: #673AB7; 
+    color: #ffffff; 
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #5a2ea5; 
+}
+
+#checkoutButton {
+    background-color: #FF5722; 
+    margin-top: 20px; 
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold; 
+}
+
+#checkoutButton:hover {
+    background-color: #e64a19; 
 }
