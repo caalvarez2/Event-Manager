@@ -6,6 +6,7 @@ module.exports = {
         auth: './src/auth.js',
         login: './src/login.js',
         management: './src/management.js',
+        profile: './src/profile.js'
     },
     output: {
         path: path.resolve(__dirname,

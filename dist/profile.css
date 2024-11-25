@@ -1,0 +1,178 @@
+body {
+    font-family: 15px Avenir-Heavy, sans-serif;
+    background-color: #1c1e24;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+
+.navbar {
+    width: 100%;
+    padding: 1rem 2rem;
+    background-color: #2b2f3a;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 2%;
+    font-weight: 500;
+}
+  
+.navbar-brand {
+  font-size: 1.75rem;
+  color: #ffffff;
+}
+
+.profile-nav ul {
+    list-style-type: none;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding-right: 2%;
+}
+
+.profile-nav li {
+    display: inline;
+}
+
+.profile-nav a {
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+#header-title {
+    text-align: center; 
+    width: 80%; 
+    padding-left: 8%;
+    padding-top: 2%;
+}
+
+.ticket-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.ticket {
+    width: 300px;
+    height: 150px;
+    background-color: #007AFF; /* #2b2f3a Alternate Color */
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transform: rotateY(20deg);
+    transition: transform 0.3s ease;
+    margin: 20px;
+    padding: 10px;
+    color:white;
+}
+
+.ticket:hover {
+    transform: rotateY(0deg);
+}
+
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    padding-bottom: 10px;
+    border-bottom: 1px solid black;
+}
+
+.ticket-body {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    
+}
+
+.ticket-info {
+    font-size: 0.9em;
+}
+
+.barcode {
+    width: 50px;
+    height: 40px;
+    background-image: linear-gradient(to right, black 2px, transparent 2px);
+    background-size: 4px 100%;
+}
+
+#signOut input[type="submit"] {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    font-weight: bold;
+    margin-top:20px;
+}
+
+#signOut input[type="submit"]:hover {
+    background-color: #c72c21;
+}
+
+.qr-code {
+    margin-top: -7px; /* Moves the QR code 10 pixels higher */
+}
+
+#payment-history {
+    padding: 20px;
+}
+
+#payment-history h2 {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+#signOutContainer {
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    padding: 20px 50px; /* Adds padding inside the container */
+    gap: 15px; /* Adds space between the buttons */
+    width: calc(100% - 100px); /* Ensures it is centered with 50px on each side */
+    box-sizing: border-box; /* Includes padding and border in width calculation */
+}
+
+#signOut {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    font-weight: bold;
+}
+
+#signOut:hover {
+    background-color: #c72c21;
+}
+
+#backButton {
+    background-color: #007AFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    font-weight: bold;
+}
+
+#backButton:hover {
+    background-color: #0052ab;
+}
+
+

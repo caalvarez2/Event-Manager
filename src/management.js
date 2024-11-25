@@ -1,4 +1,5 @@
 import app from './config.js';
+import { getAuth, signOut } from "firebase/auth";
 import { getFirestore, collection, addDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
 
 const db = getFirestore();
@@ -68,4 +69,20 @@ updateEventForm.addEventListener("submit", async (e) => {
         console.error("Error updating event: ", error);
         alert('Failed to update event. Please check the event ID.');
     }
+});
+
+const signOutButton = document.getElementById("signOut");
+
+signOutButton.addEventListener("click", (event) => {
+    const auth = getAuth(app);
+    event.preventDefault()
+
+    signOut(auth)
+    .then(() => {
+      console.log("Signed Out")
+      window.location.href = "index.html";
+    }).catch((e) => {
+      // Error signing out
+      console.log(e)
+    })
 });
