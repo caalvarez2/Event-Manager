@@ -98,3 +98,27 @@ body {
 .form-container a:hover {
   text-decoration: underline;
 }
+
+#signOutContainer {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  padding: 20px; 
+  gap: 15px; 
+}
+
+#backButton, #backButtonTwo {
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  font-weight: bold;
+}
+
+#backButton:hover, #backButtonTwo:hover {
+  background-color: #0052ab;
+}

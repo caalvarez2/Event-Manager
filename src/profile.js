@@ -85,30 +85,24 @@ document.addEventListener('DOMContentLoaded', function () {
     function createTicketElement(eventData) {
         const ticket = document.createElement("div");
         ticket.classList.add("ticket");
-        console.log("here 1")
 
         const ticketHeader = document.createElement("div");
         ticketHeader.classList.add("ticket-header");
-        console.log("here 2")
 
         const eventName = document.createElement("span");
         eventName.classList.add("event-title");
         eventName.textContent = eventData.title || "Untitled Event";
         ticketHeader.appendChild(eventName);
-        console.log("here 3")
 
         const locationName = document.createElement("span");
         locationName.classList.add("location-name");
         locationName.textContent = eventData.location || "Unknown Location";
         ticketHeader.appendChild(locationName);
-        console.log("here 4")
 
         ticket.appendChild(ticketHeader);
-        console.log("here 5")
 
         const ticketBody = document.createElement("div");
         ticketBody.classList.add("ticket-body");
-        console.log("here 6")
 
         const ticketInfo = document.createElement("div");
         ticketInfo.classList.add("ticket-info");
@@ -118,12 +112,10 @@ document.addEventListener('DOMContentLoaded', function () {
             <span>Date: ${eventData.date || "N/A"}</span>
         `;
         ticketBody.appendChild(ticketInfo);
-        console.log("here 7")
 
         const qrContainer = document.createElement("canvas");
         qrContainer.classList.add("qr-code");
         ticketBody.appendChild(qrContainer);
-        console.log("here 8")
 
         new QRious({
             element: qrContainer,

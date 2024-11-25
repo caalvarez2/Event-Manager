@@ -324,3 +324,9 @@ document.getElementById('checkoutButton').addEventListener('click', () => {
  
     window.location.href = `checkout.html?${queryParams.toString()}`;
 });
+
+const backButton = document.getElementById("backButton");
+
+backButton.addEventListener("click", (event) => {
+    window.location.href = "index.html"
+})

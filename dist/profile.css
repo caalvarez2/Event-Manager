@@ -136,11 +136,11 @@ body {
 
 #signOutContainer {
     display: flex;
-    justify-content: flex-start; /* Align items to the left */
-    padding: 20px 50px; /* Adds padding inside the container */
-    gap: 15px; /* Adds space between the buttons */
-    width: calc(100% - 100px); /* Ensures it is centered with 50px on each side */
-    box-sizing: border-box; /* Includes padding and border in width calculation */
+    justify-content: flex-start; 
+    padding: 20px 50px;
+    gap: 15px; 
+    width: calc(100% - 100px); 
+    box-sizing: border-box; 
 }
 
 #signOut {

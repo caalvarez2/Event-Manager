@@ -39,6 +39,10 @@
                     <p>Already have an account? <a href="#" id="signInLink">Sign In</a></p>
                 </form>
             </div>
+
+            <div id="signOutContainer">
+                <button id="backButton"> Go Back </button>
+            </div>
             
         </div>
 
@@ -60,4 +64,10 @@
         document.getElementById('signIn').style.display = 'block';
         document.getElementById('createAccount').style.display = 'none';
     });
+
+    const backButton = document.getElementById("backButton");
+
+    backButton.addEventListener("click", (event) => {
+        window.location.href = "index.html"
+    })
 </script>

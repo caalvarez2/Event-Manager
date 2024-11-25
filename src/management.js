@@ -36,7 +36,7 @@ addEventForm.addEventListener('submit', async (e) => {
             row: String.fromCharCode(charCode),
             seats: Array.from({ length: seatsPerRow }, (_, i) => ({
                 number: `${String.fromCharCode(charCode)}${i + 1}`,
-                occupied: 0  // Initialize all seats as unoccupied
+                occupied: 0 
             }))
         };
         seatMap.push(row);
@@ -65,23 +65,61 @@ addEventForm.addEventListener('submit', async (e) => {
 
 cancelEventForm.addEventListener('submit', async (e) => {
     e.preventDefault();
- 
+
     const eventName = cancelEventForm.event_name.value;
- 
+
     try {
         const eventsCollection = collection(db, 'Events');
         const q = query(eventsCollection, where("title", "==", eventName));
         const querySnapshot = await getDocs(q);
- 
+
         if (querySnapshot.empty) {
             alert('No event found with the given name.');
             return;
         }
+
         const eventDoc = querySnapshot.docs[0];
-        await deleteDoc(doc(db, 'Events', eventDoc.id));
- 
+        const eventId = eventDoc.id;
+        const eventData = eventDoc.data();
+
+        const customersCollection = collection(db, 'Customers');
+        const customersSnapshot = await getDocs(customersCollection);
+
+        for (const customerDoc of customersSnapshot.docs) {
+            const customerData = customerDoc.data();
+            const purchases = customerData.purchases || [];
+            const ticketCount = customerData.ticketCount || 0;
+
+            if (purchases.includes(eventId)) {
+                let ticketsToRefund = 0;
+                eventData.seatMap.forEach(row => {
+                    row.seats.forEach(seat => {
+                        if (seat.occupied === 1) {
+                            ticketsToRefund += 1;
+                        }
+                    });
+                });
+
+                const ticketPrice = 5;
+                const refundAmount = ticketsToRefund * ticketPrice;
+
+                // Update the customer's purchases, balance, and ticketCount
+                const updatedPurchases = purchases.filter(purchase => purchase !== eventId);
+                const newBalance = customerData.balance + refundAmount;
+                const newTicketCount = ticketCount - ticketsToRefund;
+
+                await updateDoc(doc(db, 'Customers', customerDoc.id), {
+                    purchases: updatedPurchases,
+                    balance: newBalance,
+                    ticketCount: newTicketCount
+                });
+            }
+        }
+
+        await deleteDoc(doc(db, 'Events', eventId));
+
         cancelEventForm.reset();
-        alert(`Event "${eventName}" canceled successfully!`);
+        alert(`Event "${eventName}" canceled successfully and refunds processed!`);
     } catch (error) {
         console.error("Error canceling event: ", error);
         alert('Failed to cancel event.');
@@ -90,13 +128,12 @@ cancelEventForm.addEventListener('submit', async (e) => {
 
 updateEventForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const eventName = updateEventForm.event_name.value; // Get the event name from the form
+    const eventName = updateEventForm.event_name.value;
     const newDate = updateEventForm.date.value;
     const newTime = updateEventForm.time.value;
     console.log("Update event name: ", eventName);
  
     try {
-        // Query Firestore for the event document with the matching name
         const eventsCollection = collection(db, 'Events');
         const q = query(eventsCollection, where("title", "==", eventName));
         const querySnapshot = await getDocs(q);
@@ -105,12 +142,10 @@ updateEventForm.addEventListener("submit", async (e) => {
             alert("No event found with the given name.");
             return;
         }
- 
-        // Assuming event names are unique, update the first matching document
+
         const eventDoc = querySnapshot.docs[0];
         const eventRef = doc(db, 'Events', eventDoc.id);
  
-        // Update the event's date and time
         await updateDoc(eventRef, {
             date: newDate,
             time: newTime
@@ -134,7 +169,6 @@ signOutButton.addEventListener("click", (event) => {
       console.log("Signed Out")
       window.location.href = "index.html";
     }).catch((e) => {
-      // Error signing out
       console.log(e)
     })
 });

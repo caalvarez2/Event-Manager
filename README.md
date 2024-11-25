@@ -5,6 +5,31 @@ The following document outlines the functionalities and the idea of a an Event M
 
 This document will be updated throughout the semester. 
 
+### For Customers
+
+To login as a user, use the following credentials:
+    
+    Email: user@test.com
+    Password: Password123
+
+- Create account and Sign In to navigate the Event Manager System.
+- View the different events available in the Event Manager System.
+- Purchase tickets for a specific event.
+- Filter out the events to find events easier.
+- Select the amount of seats you want to purchase.
+- Checkout your purchase and have your tickets stored in your account. 
+- Availibility to see your purchased tickets in your account.
+
+### For Managers
+
+To login as a manager, use the following credentials:
+    
+    Email: manager@test.com
+    Password: Password
+
+- Add, update, and delete events.
+- Refund money to all customers that purchased tickets for an event. 
+
 ## Development
 The Event Management System is under development and is not yet in final form. Features may be added, deleted, or modified throughout the semester. 
 

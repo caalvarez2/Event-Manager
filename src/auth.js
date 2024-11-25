@@ -54,7 +54,7 @@ createAccountForm.addEventListener("submit", async (event) => {
         }
 
         alert(`${role.charAt(0).toUpperCase() + role.slice(1)} account created successfully!`);
-        location.reload(); 
+        window.location.href = "index.html";
     } catch (error) {
         console.error("Error creating account:", error);
         alert("Failed to create account. Please try again.");

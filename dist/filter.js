@@ -27,14 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check authentication state
   onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-          // User is signed in - ensure the "My Account" button is visible
           console.log("User is signed in:", currentUser.uid);
-          myAccountButton.style.display = "inline-block"; // Show the button
+          myAccountButton.style.display = "inline-block"; 
           signInButton.style.display = "none";
       } else {
-          // User is not signed in - hide the "My Account" button
           console.log("No user signed in.");
-          myAccountButton.style.display = "none"; // Hide the button
+          myAccountButton.style.display = "none"; 
       }
   });
 });
@@ -114,14 +112,24 @@ function createEventCard(eventData, eventId) {
   cartButton.textContent = 'View Tickets';
   cartButton.classList.add('select-button');
 
-  //modify to add tickets chosen through seating chart ************ //
   cartButton.onclick = () => {
-    window.location.href = `seating.html?eventId=${eventId}`;
-  };
-  card.appendChild(cartButton);
+    const auth = getAuth(app);
+    const currentUser = auth.currentUser;
 
+    if (currentUser) {
+      window.location.href = `seating.html?eventId=${eventId}`;
+    } else {
+      alert("You must create an account or log in to purchase tickets.");
+      window.location.href = "login.html"; 
+    }
+  };
+
+  card.appendChild(cartButton);
   return card;
 }
+
+
+document.getElementById('apply-filters-button').addEventListener('click', fetchAndRenderEvents);
 
 // Fetch all events and apply filters locally
 async function fetchAndRenderEvents() {
