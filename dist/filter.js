@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
 import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -17,7 +17,6 @@ const db = getFirestore(app);
 
 const eventsContainer = document.querySelector('.event-cards');
 const loadingIndicator = document.getElementById('loading');
-const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 document.addEventListener('DOMContentLoaded', () => {
   const auth = getAuth(app);
@@ -72,16 +71,6 @@ async function populateFilters() {
     locationSelect.appendChild(option);
   });
 }
-
-function addToCart(eventData) {
-  cart.push(eventData);
-  localStorage.setItem('cart', JSON.stringify(cart));
-  alert("Event added to cart!");
-}
-
-document.getElementById('view-cart').addEventListener('click', () => {
-  window.location.href = 'checkout.html';
-});
 
 function createEventCard(eventData, eventId) {
   const card = document.createElement('div');
@@ -141,14 +130,14 @@ async function fetchAndRenderEvents() {
       const matchesDate = !eventDate || data.date === eventDate;
 
       if (matchesType && matchesLocation && matchesDate) {
-        filteredEvents.push({data,eventId});
+        filteredEvents.push({data, eventId});
       }
     });
 
     if (filteredEvents.length === 0) {
       eventsContainer.innerHTML = '<p>No events found for the selected filters.</p>';
     } else {
-      filteredEvents.forEach(({data,eventId}) => {
+      filteredEvents.forEach(({data, eventId}) => {
         const eventCard = createEventCard(data, eventId);
         eventsContainer.appendChild(eventCard);
       });

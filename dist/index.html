@@ -15,12 +15,16 @@
 <body>
 
   <header class="navbar">
-    <div class="navbar-brand">EMS - Event Manager System</div>
+    <div class="navbar-brand logo-container">
+      <img src="image.png" alt="EMS Logo" class="navbar-logo">
+      <span class="navbar-text"> - Event Manager System</span>
+    </div>
     <nav>
       <button id="signInButton" class="signin-button"><a href="login.html">Sign In</a></button>
       <button id="myAccountButton" class="signin-button"><a href="profile.html">My Account</a></button>
     </nav>
   </header>
+  
 
   <main>
     <section id="filter" class="filter-section">
@@ -43,10 +47,6 @@
       <h2>Upcoming Events</h2>
       <div class="event-cards"></div>
     </section>
-
-    <div class="view-cart-bottom">
-      <button id="view-cart">View Cart</button>
-    </div>
   </main>
 
   <footer>
