@@ -1,6 +1,6 @@
 import app from './config.js';
 import { getAuth, signOut } from "firebase/auth";
-import { getFirestore, collection, addDoc, doc, deleteDoc, updateDoc, query, where, getDocs } from "firebase/firestore";
+import { getFirestore, collection, addDoc, doc, deleteDoc, updateDoc, query, where, getDocs, getDoc } from "firebase/firestore";
 
 const db = getFirestore();
 
@@ -80,41 +80,44 @@ cancelEventForm.addEventListener('submit', async (e) => {
 
         const eventDoc = querySnapshot.docs[0];
         const eventId = eventDoc.id;
-        const eventData = eventDoc.data();
 
-        const customersCollection = collection(db, 'Customers');
-        const customersSnapshot = await getDocs(customersCollection);
+        const ticketsCollection = collection(db, 'Tickets');
+        const ticketsQuery = query(ticketsCollection, where("event", "==", eventId));
+        const ticketsSnapshot = await getDocs(ticketsQuery);
 
-        for (const customerDoc of customersSnapshot.docs) {
-            const customerData = customerDoc.data();
-            const purchases = customerData.purchases || [];
-            const ticketCount = customerData.ticketCount || 0;
+        const refundPromises = [];
 
-            if (purchases.includes(eventId)) {
-                let ticketsToRefund = 0;
-                eventData.seatMap.forEach(row => {
-                    row.seats.forEach(seat => {
-                        if (seat.occupied === 1) {
-                            ticketsToRefund += 1;
-                        }
-                    });
-                });
+        for (const ticketDoc of ticketsSnapshot.docs) {
+            const ticketData = ticketDoc.data();
+            const userId = ticketData.userPurchased;
+            const refundAmount = parseFloat(ticketData.amountSpend || 0); 
+            const seatCount = ticketData.seats.length;
 
-                const ticketPrice = 5;
-                const refundAmount = ticketsToRefund * ticketPrice;
+            if (userId) {
+                const userRef = doc(db, 'Customers', userId);
+                const userDoc = await getDoc(userRef);
 
-                // Update the customer's purchases, balance, and ticketCount
-                const updatedPurchases = purchases.filter(purchase => purchase !== eventId);
-                const newBalance = customerData.balance + refundAmount;
-                const newTicketCount = ticketCount - ticketsToRefund;
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
 
-                await updateDoc(doc(db, 'Customers', customerDoc.id), {
-                    purchases: updatedPurchases,
-                    balance: newBalance,
-                    ticketCount: newTicketCount
-                });
+                    const updatedPurchases = userData.purchases.filter(purchase => purchase !== ticketDoc.id);
+                    const newBalance = (userData.balance || 0) + refundAmount;
+                    const newTicketCount = (userData.ticketCount || 0) - seatCount;
+
+                    refundPromises.push(
+                        updateDoc(userRef, {
+                            purchases: updatedPurchases,
+                            balance: newBalance,
+                            ticketCount: newTicketCount,
+                        })
+                    );
+                }
             }
+
+            refundPromises.push(deleteDoc(doc(db, 'Tickets', ticketDoc.id)));
         }
+
+        await Promise.all(refundPromises);
 
         await deleteDoc(doc(db, 'Events', eventId));
 
@@ -125,6 +128,7 @@ cancelEventForm.addEventListener('submit', async (e) => {
         alert('Failed to cancel event.');
     }
 });
+
 
 updateEventForm.addEventListener("submit", async (e) => {
     e.preventDefault();
