@@ -17,7 +17,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Handle account creation
 const createAccountForm = document.getElementById("createAccountForm");
 createAccountForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -61,7 +60,6 @@ createAccountForm.addEventListener("submit", async (event) => {
     }
 });
 
-// Handle sign-in
 const signInForm = document.getElementById("signIn");
 
 signInForm.addEventListener("submit", async (event) => {
@@ -97,28 +95,4 @@ signInForm.addEventListener("submit", async (event) => {
     }
 });
 
-
-// Sign out
-const signOutForm = document.getElementById("signOut")
-
-signOutButton.addEventListener("submit", (event) => {
-    event.preventDefault()
-
-    signOut(auth)
-    .then(() => {
-      console.log("Signed Out")
-      window.location.href = "index.html";
-    }).catch((e) => {
-      // Error signing out
-      console.log(e)
-    })
-}) 
-
-const signOutButton = document.getElementById("signOut");
-
-signOutButton.addEventListener("click", (event) => {
-    event.preventDefault();
-    console.log("Button click detected");
-    alert("Button works!");
-});
 

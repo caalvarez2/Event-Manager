@@ -1,13 +1,13 @@
 import app from './config.js';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, updateDoc, arrayUnion, increment, getDoc } from "firebase/firestore";
+import { getFirestore, doc, updateDoc, arrayUnion, increment, getDoc, addDoc, collection } from "firebase/firestore";
 
 const db = getFirestore(app);
 const auth = getAuth(app);
 
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const eventId = urlParams.get("eventId"); // Event ID from the URL
+    const eventId = urlParams.get("eventId"); 
     const seats = urlParams.get("seats") ? urlParams.get("seats").split(",") : [];
     const totalPrice = urlParams.get("totalPrice") ? parseFloat(urlParams.get("totalPrice")).toFixed(2) : "0.00";
 
@@ -48,19 +48,42 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Proceed to update Firestore
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const userRef = doc(db, "Customers", user.uid); // Reference to the user's document
+                const userRef = doc(db, "Customers", user.uid);
                 try {
-                    // Update Firestore: Add the eventId to purchases and increment ticketCount
-                    await updateDoc(userRef, {
-                        purchases: arrayUnion(eventId), // Add eventId to purchases array
-                        ticketCount: increment(seats.length), // Increment ticketCount by the number of seats
-                    });
-                    await updateSeatMap(eventId, seats);
-                    alert("Thank you for your purchase! Your tickets have been updated.");
-                    window.location.href = "index.html"; // Redirect to the index page
+                    const userDoc = await getDoc(userRef);
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        const currentBalance = userData.balance || 0;
+
+                        const newBalance = currentBalance - parseFloat(priceWithTax);
+                        if (newBalance < 0) {
+                            alert("Insufficient balance to complete the purchase.");
+                            return;
+                        }
+
+                        const ticketRef = await addDoc(collection(db, "Tickets"), {
+                            amountSpend: totalPrice,
+                            event: eventId,
+                            seats: seats,
+                            userPurchased: user.uid,
+                        });
+
+                        await updateDoc(userRef, {
+                            purchases: arrayUnion(ticketRef.id),
+                            ticketCount: increment(seats.length),
+                            balance: newBalance,
+                        });
+
+                        await updateSeatMap(eventId, seats);
+
+                        alert("Thank you for your purchase! Your tickets have been updated.");
+                        window.location.href = "index.html";
+                    } else {
+                        console.error("User document not found.");
+                        alert("Something went wrong. Please try again.");
+                    }
                 } catch (error) {
                     console.error("Error updating Firestore:", error);
                     alert("Something went wrong while updating your tickets. Please try again.");
@@ -68,11 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 alert("No user is signed in. Please sign in to complete the purchase.");
             }
-        });
+        });        
     });
 });
 
-// Update occupied seats in firebase
 const updateSeatMap = async (eventId, purchasedSeats) => {
     const eventRef = doc(db, "Events", eventId);
 

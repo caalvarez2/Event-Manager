@@ -133,8 +133,6 @@ function markOccupiedSeats() {
     });
 }
  
- 
-// Creating seats
 function createSeats(seatMap) {
     const stadiumContainer = document.querySelector('.stadium-container');
     const performanceArea = document.querySelector('.performance-area');
@@ -189,7 +187,6 @@ function createSeatElement(label) {
     return seatElement;
 }
  
-// Select Seats
 function toggleSeatSelection(label, seatElement) {
     if (seatElement.classList.contains('occupied')) {
         return;
@@ -224,8 +221,6 @@ function removeSeatFromCart(seatLabel) {
     console.log(`Seat ${seatLabel} removed from cart and marked as available.`);
 }
  
- 
-// Add selected tickets to the list of the cart
 function updateSelectedSeatsList() {
     const selectedSeatsList = document.getElementById('selectedSeatsList');
     selectedSeatsList.innerHTML = '';
@@ -257,7 +252,6 @@ function updateSelectedSeatsList() {
     }
 }
  
-// Move the selected seats to the cart and mark them occupied
 function addToCart() {
     const validSeats = selectedSeats.filter(seatLabel => {
         if (occupiedSeatsMap.includes(seatLabel)) {

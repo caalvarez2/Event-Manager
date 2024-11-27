@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 0;
     font-size: 16px;
+    overflow-x: hidden; 
 }
 
 .navbar {
@@ -53,17 +54,53 @@ body {
     padding-top: 2%;
 }
 
-.ticket-container {
+.profile-content {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+    gap: 20px; 
+    padding: 20px;
+}
+
+.profile-info {
+    flex: 1; 
+}
+
+.ticket-section {
+    flex: 2; 
+}
+
+.profile-card {
+    background-color: #2b2f3a;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.profile-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #e0e0e0;
+}
+
+.profile-card p {
+    margin: 5px 0;
+    font-size: 1.1rem;
+    color: #c0c0c0;
+}
+
+.ticket-container {
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px; 
+    justify-items: center; 
 }
 
 .ticket {
     width: 300px;
     height: 150px;
-    background-color: #007AFF; /* #2b2f3a Alternate Color */
+    background-color: #007AFF;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     transform: rotateY(20deg);
@@ -121,7 +158,7 @@ body {
 }
 
 .qr-code {
-    margin-top: -7px; /* Moves the QR code 10 pixels higher */
+    margin-top: -7px; 
 }
 
 #payment-history {
@@ -175,4 +212,8 @@ body {
     background-color: #0052ab;
 }
 
-
+.ticket-section h2 {
+    margin-left: 40px;
+    margin-top: 20px;
+    font-size: 1.5rem; 
+}
