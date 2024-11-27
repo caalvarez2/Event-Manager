@@ -174,3 +174,36 @@ button:hover {
   #backButton:hover, #backButtonTwo:hover {
     background-color: #0052ab;
   }
+
+.tooltip {
+    position: absolute;
+    display: none; 
+    background-color: rgba(0, 0, 0, 0.85); 
+    color: #fff;
+    text-align: center;
+    padding: 10px 15px;
+    border-radius: 8px; 
+    font-size: 14px; 
+    font-weight: bold;
+    z-index: 10;
+    pointer-events: none;
+    white-space: nowrap; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out; 
+    transform: translate(-50%, -10px); 
+}
+
+.tooltip.visible {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -20px); 
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

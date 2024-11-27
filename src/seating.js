@@ -13,6 +13,10 @@ const firebaseConfig = {
  
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+const tooltip = document.createElement('div');
+tooltip.classList.add('tooltip');
+document.body.appendChild(tooltip);
  
 const totalRows = 17;
 const totalCols = 23;
@@ -66,6 +70,25 @@ const bronzeSeats = [
     'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18',
     'Q19', 'Q20', 'Q21', 'Q22', 'Q23'
 ];
+
+function showTooltip(seatElement, seatLabel) {
+    const price = getSeatPrice(seatLabel); 
+    let zone = 'Bronze'; 
+    if (vipSeats.includes(seatLabel)) {
+        zone = 'VIP';
+    } else if (silverSeats.includes(seatLabel)) {
+        zone = 'Silver';
+    }
+    tooltip.textContent = `${zone} - $${price}`;
+    tooltip.classList.add('visible');
+    const rect = seatElement.getBoundingClientRect();
+    tooltip.style.left = `${rect.left + window.scrollX + rect.width / 2}px`;
+    tooltip.style.top = `${rect.top + window.scrollY - 30}px`;
+}
+
+function hideTooltip() {
+    tooltip.classList.remove('visible');
+}
  
 function getEventIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
@@ -184,6 +207,8 @@ function createSeatElement(label) {
         seatElement.onclick = null;
     } else {
         seatElement.addEventListener('click', () => toggleSeatSelection(label, seatElement));
+        seatElement.addEventListener('mouseover', () => showTooltip(seatElement, label)); 
+        seatElement.addEventListener('mouseout', hideTooltip); 
     }
  
     return seatElement;
