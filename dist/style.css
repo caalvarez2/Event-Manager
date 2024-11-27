@@ -118,6 +118,7 @@ main {
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 1rem; /* Add padding inside the card */
 }
 
 .event-card:hover {
@@ -126,7 +127,7 @@ main {
 }
 
 .event-info {
-  padding: 1rem;
+  padding: 1rem 1rem 1rem 2rem; /* Add left padding and adjust spacing */
 }
 
 .event-info h3 {
@@ -263,3 +264,25 @@ footer p {
 #backButton:hover, #backButtonTwo:hover {
   background-color: #0052ab;
 }
+/* Navbar Logo and Text Container */
+.logo-container {
+  display: flex;
+  align-items: center; /* Align the logo and text vertically */
+  gap: 10px; /* Space between the logo and text */
+}
+
+/* Logo Styling */
+.navbar-logo {
+  max-height: 80px; /* Adjust logo size */
+  width: auto; /* Maintain aspect ratio */
+}
+
+/* Text Styling */
+.navbar-text {
+  font-size: 2rem; /* Adjust text size */
+  color: #ffffff; /* Match the navbar text color */
+  font-weight: 700; /* Make the text bold */
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+
